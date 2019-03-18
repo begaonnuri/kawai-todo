@@ -32,7 +32,7 @@ export default class ToDo extends React.Component {
                     <TouchableOpacity onPress={this._toggleComplete}>
                         <View style={[styles.circle, isCompleted ? styles.completedCircle : styles.uncompletedCircle]}></View>
                     </TouchableOpacity>
-                    {isEditing ? (<TextInput style={[styles.input, styles.text, isCompleted ? styles.completedText : styles.uncompletedText]} value={toDoValue} multiline={true} onChangeText={this._controlInput} returnKeyType={"done"} onBlur={this._finishEditing} />) : (
+                    {isEditing ? (<TextInput style={[styles.input, styles.text, isCompleted ? styles.completedText : styles.uncompletedText]} value={toDoValue} multiline={true} onChangeText={this._controlInput} returnKeyType={"done"} onBlur={this._finishEditing} underlineColorAndroid={"transparent"}/>) : (
                         <Text style={[styles.text, isCompleted ? styles.completedText : styles.uncompletedText]}>{text}</Text>
                     )}
                 </View>
@@ -51,7 +51,7 @@ export default class ToDo extends React.Component {
                                     <Text style={styles.actionText}>pencil</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPressOut={() => deleteToDo(id)}>
+                            <TouchableOpacity onPressOut={(event) => {event.stopPropagation; deleteToDo(id);}} >
                                 <View style={styles.actionContatiner}>
                                     <Text style={styles.actionText}>cancel</Text>
                                 </View>
@@ -61,7 +61,8 @@ export default class ToDo extends React.Component {
             </View>
         );
     }
-    _toggleComplete = () => {
+    _toggleComplete = (event) => {
+        event.stopPropagation();
         const { isCompleted } = this.props;
         if(isCompleted){
             uncompleteToDo(id);
@@ -69,12 +70,14 @@ export default class ToDo extends React.Component {
             completeToDo(id);
         }
     };
-    _startEditing = () => {
+    _startEditing = (event) => {
+        event.stopPropagation();
         this.state({
             isEditing: true
         })
     };
-    _finishEditing = () => {
+    _finishEditing = (event) => {
+        event.stopPropagation();
         const { toDoValue } = this.state;
         const { id, updateToDo } = this.props;
         updateToDo(id, toDoValue);  
